@@ -20,7 +20,13 @@ app.use("/api/logistics", logisticsRoutes);
 app.get("/", (req, res) => {
   res.send("MAMS API is running...");
 });
-
+// Example route to test DB
+app.get('/test-db', (req, res) => {
+  connection.query('SELECT NOW() AS now', (err, results) => {
+    if (err) return res.status(500).json(err);
+    res.json(results);
+  });
+});
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error("Error:", err.stack);
@@ -29,5 +35,5 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 7373;
 app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
+  console.log(` Server running on port ${PORT}`);
 });

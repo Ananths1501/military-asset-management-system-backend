@@ -4,8 +4,8 @@ const pool = require("../config/db");
 const jwt = require("jsonwebtoken");
 // local helper to record every action
 async function logAction(userId, role, action, target, details = {}) {
-  await pool.query(
-    "INSERT INTO audit_logs (user_id, role, action, target, details) VALUES ($1, $2, $3, $4, $5)",
+  await pool.execute(
+    "INSERT INTO audit_logs (user_id, role, action, target, details) VALUES (?, ?, ?, ?, ?)",
     [userId, role, action, target, JSON.stringify(details)]
   );
 }
@@ -16,7 +16,7 @@ async function logAction(userId, role, action, target, details = {}) {
 exports.loginCommander = async (req, res) => {
   const { username, password } = req.body;
   try {
-  const { rows } = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
+    const [rows] = await pool.execute("SELECT * FROM users WHERE username = ?", [username]);
     const user = rows[0];
 
     if (!user) {
@@ -57,7 +57,7 @@ async function assertCommanderBase(req) {
     throw error;
   }
   // base exists?
-  const { rows: b } = await pool.query("SELECT id FROM bases WHERE id=$1", [commanderBaseId]);
+  const [b] = await pool.execute("SELECT id FROM bases WHERE id=?", [commanderBaseId]);
   if (b.length === 0) {
     const error = new Error("Assigned base not found");
     error.status = 400;
@@ -73,8 +73,8 @@ async function assertCommanderBase(req) {
 exports.listLogistics = async (req, res) => {
   try {
     const baseId = await assertCommanderBase(req);
-    const { rows } = await pool.query(
-      "SELECT id, username, role, base_id, is_active FROM users WHERE role='logistics' AND base_id=$1",
+    const [rows] = await pool.execute(
+      "SELECT id, username, role, base_id, is_active FROM users WHERE role='logistics' AND base_id=?",
       [baseId]
     );
     res.json(rows);
@@ -92,12 +92,12 @@ exports.addLogistics = async (req, res) => {
       return res.status(400).json({ message: "username and password are required" });
     }
 
-  const { rows: dup } = await pool.query("SELECT id FROM users WHERE username=$1", [username]);
+    const [dup] = await pool.execute("SELECT id FROM users WHERE username=?", [username]);
     if (dup.length > 0) return res.status(400).json({ message: "Username already exists" });
 
     const hash = await bcrypt.hash(password, 10);
-    const result = await pool.query(
-      "INSERT INTO users (username, password_hash, role, base_id, is_active) VALUES ($1, $2, 'logistics', $3, 1) RETURNING id",
+    const [result] = await pool.execute(
+      "INSERT INTO users (username, password_hash, role, base_id, is_active) VALUES (?, ?, 'logistics', ?, 1)",
       [username, hash, baseId]
     );
 
@@ -119,8 +119,8 @@ exports.updateLogistics = async (req, res) => {
   try {
     const baseId = await assertCommanderBase(req);
 
-    const { rows: u } = await pool.query(
-      "SELECT id, base_id, role FROM users WHERE id=$1 AND role='logistics'",
+    const [u] = await pool.execute(
+      "SELECT id, base_id, role FROM users WHERE id=? AND role='logistics'",
       [id]
     );
     if (u.length === 0) return res.status(404).json({ message: "Logistics user not found" });
@@ -326,18 +326,7 @@ exports.assignToPersonnel = async (req, res) => {
   const commanderBaseId = await assertCommanderBase(req);
 
   // transaction to safely move stock
-  // For PostgreSQL, use transactions with pool.query and BEGIN/COMMIT/ROLLBACK
-  const client = await pool.connect();
-  try {
-    await client.query('BEGIN');
-    // ...transaction logic here...
-    await client.query('COMMIT');
-  } catch (err) {
-    await client.query('ROLLBACK');
-    throw err;
-  } finally {
-    client.release();
-  }
+  const conn = await pool.getConnection();
   try {
     await conn.beginTransaction();
 

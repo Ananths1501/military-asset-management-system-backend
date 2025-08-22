@@ -4,8 +4,8 @@ const pool = require("../config/db");
 
 // 🔹 Helper: log every action
 async function logAction(userId, role, action, target, details = {}) {
-  await pool.query(
-    "INSERT INTO audit_logs (user_id, role, action, target, details) VALUES ($1, $2, $3, $4, $5)",
+  await pool.execute(
+    "INSERT INTO audit_logs (user_id, role, action, target, details) VALUES (?, ?, ?, ?, ?)",
     [userId, role, action, target, JSON.stringify(details)]
   );
 }
@@ -14,7 +14,7 @@ async function logAction(userId, role, action, target, details = {}) {
 async function loginAdmin(req, res) {
   const { username, password } = req.body;
   try {
-  const { rows } = await pool.query("SELECT * FROM users WHERE username=$1", [username]);
+    const [rows] = await pool.execute("SELECT * FROM users WHERE username=?", [username]);
     const user = rows[0];
     if (!user) return res.status(404).json({ message: "User not found" });
 
@@ -40,7 +40,7 @@ async function loginAdmin(req, res) {
 // ======================= BASE MANAGEMENT =======================
 async function listBases(req, res) {
   try {
-  const { rows } = await pool.query("SELECT * FROM bases");
+    const [rows] = await pool.execute("SELECT * FROM bases");
     res.json(rows);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -50,12 +50,15 @@ async function listBases(req, res) {
 async function addBase(req, res) {
   const { name, location } = req.body;
   try {
-    const { rows: exists } = await pool.query("SELECT id FROM bases WHERE name=$1", [name]);
+    const [exists] = await pool.execute("SELECT id FROM bases WHERE name=?", [name]);
     if (exists.length > 0) {
       return res.status(400).json({ message: "Base already exists" });
     }
 
-    const result = await pool.query("INSERT INTO bases (name, location) VALUES ($1, $2) RETURNING id", [name, location]);
+    const [result] = await pool.execute("INSERT INTO bases (name, location) VALUES (?, ?)", [
+      name,
+      location,
+    ]);
 
     await logAction(req.user.id, "admin", "create", "base", { baseId: result.insertId, name });
     res.status(201).json({ message: "Base created", baseId: result.insertId });
@@ -68,10 +71,10 @@ async function updateBase(req, res) {
   const { id } = req.params;
   const { name, location } = req.body;
   try {
-  const { rows: exists } = await pool.query("SELECT id FROM bases WHERE id=$1", [id]);
-  if (exists.length === 0) return res.status(404).json({ message: "Base not found" });
+    const [exists] = await pool.execute("SELECT id FROM bases WHERE id=?", [id]);
+    if (exists.length === 0) return res.status(404).json({ message: "Base not found" });
 
-  await pool.query("UPDATE bases SET name=$1, location=$2 WHERE id=$3", [name, location, id]);
+    await pool.execute("UPDATE bases SET name=?, location=? WHERE id=?", [name, location, id]);
 
     await logAction(req.user.id, "admin", "update", "base", { baseId: id, name, location });
     res.json({ message: "Base updated" });
@@ -103,17 +106,17 @@ async function addUser(req, res) {
       return res.status(400).json({ message: "Only one admin allowed" });
     }
 
-    const { rows: exists } = await pool.query("SELECT id FROM users WHERE username=$1", [username]);
+    const [exists] = await pool.execute("SELECT id FROM users WHERE username=?", [username]);
     if (exists.length > 0) return res.status(400).json({ message: "Username already exists" });
 
     if (base_id) {
-      const { rows: base } = await pool.query("SELECT id FROM bases WHERE id=$1", [base_id]);
+      const [base] = await pool.execute("SELECT id FROM bases WHERE id=?", [base_id]);
       if (base.length === 0) return res.status(400).json({ message: "Base does not exist" });
     }
 
     const hashed = await bcrypt.hash(password, 10);
-    const result = await pool.query(
-      "INSERT INTO users (username, password_hash, role, base_id) VALUES ($1, $2, $3, $4) RETURNING id",
+    const [result] = await pool.execute(
+      "INSERT INTO users (username, password_hash, role, base_id) VALUES (?, ?, ?, ?)",
       [username, hashed, role, base_id]
     );
 
@@ -128,15 +131,20 @@ async function updateUser(req, res) {
   const { id } = req.params;
   const { username, role, base_id } = req.body;
   try {
-    const { rows: exists } = await pool.query("SELECT id FROM users WHERE id=$1", [id]);
+    const [exists] = await pool.execute("SELECT id FROM users WHERE id=?", [id]);
     if (exists.length === 0) return res.status(404).json({ message: "User not found" });
 
     if (base_id) {
-      const { rows: base } = await pool.query("SELECT id FROM bases WHERE id=$1", [base_id]);
+      const [base] = await pool.execute("SELECT id FROM bases WHERE id=?", [base_id]);
       if (base.length === 0) return res.status(400).json({ message: "Base does not exist" });
     }
 
-    await pool.query("UPDATE users SET username=$1, role=$2, base_id=$3 WHERE id=$4", [username, role, base_id, id]);
+    await pool.execute("UPDATE users SET username=?, role=?, base_id=? WHERE id=?", [
+      username,
+      role,
+      base_id,
+      id,
+    ]);
 
     await logAction(req.user.id, "admin", "update", "user", { userId: id, username, role, base_id });
     res.json({ message: "User updated" });
@@ -148,10 +156,10 @@ async function updateUser(req, res) {
 async function deleteUser(req, res) {
   const { id } = req.params;
   try {
-  const { rows: exists } = await pool.query("SELECT id FROM users WHERE id=$1", [id]);
-  if (exists.length === 0) return res.status(404).json({ message: "User not found" });
+    const [exists] = await pool.execute("SELECT id FROM users WHERE id=?", [id]);
+    if (exists.length === 0) return res.status(404).json({ message: "User not found" });
 
-  await pool.query("DELETE FROM users WHERE id=$1", [id]);
+    await pool.execute("DELETE FROM users WHERE id=?", [id]);
 
     await logAction(req.user.id, "admin", "delete", "user", { userId: id });
     res.json({ message: "User deleted" });
@@ -162,7 +170,7 @@ async function deleteUser(req, res) {
 
 async function getAllUsers(req, res) {
   try {
-  const { rows } = await pool.query("SELECT id, username, role, base_id FROM users");
+    const [rows] = await pool.execute("SELECT id, username, role, base_id FROM users");
     res.json(rows);
   } catch (err) {
     res.status(500).json({ message: err.message });

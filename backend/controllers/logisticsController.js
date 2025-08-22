@@ -6,8 +6,8 @@ const jwt = require("jsonwebtoken");
 exports.loginLogistics = async (req, res) => {
   const { username, password } = req.body;
   try {
-    const { rows } = await pool.query(
-      "SELECT * FROM users WHERE username = $1 AND role = 'logistics'",
+    const [rows] = await pool.execute(
+      "SELECT * FROM users WHERE username = ? AND role = 'logistics'",
       [username]
     );
     const user = rows[0];
@@ -36,21 +36,21 @@ exports.addPersonnel = async (req, res) => {
   const { base_id } = req.user;
 
   try {
-    const { rows: exists } = await pool.query(
-      "SELECT id FROM personnel WHERE service_number = $1",
+    const [exists] = await pool.execute(
+      "SELECT id FROM personnel WHERE service_number = ?",
       [service_number]
     );
     if (exists.length > 0)
       return res.status(400).json({ message: "Service number already exists" });
 
-    await pool.query(
-      "INSERT INTO personnel (name, ranks, service_number, base_id, assigned_unit) VALUES ($1, $2, $3, $4, $5)",
+    await pool.execute(
+      "INSERT INTO personnel (name, ranks, service_number, base_id, assigned_unit) VALUES (?, ?, ?, ?, ?)",
       [name, ranks, service_number, base_id, assigned_unit]
     );
 
-    await pool.query(
-      "INSERT INTO audit_logs (user_id, role, action, target, details) VALUES ($1, $2, 'add_personnel', $3, $4)",
-      [req.user.id, req.user.role, name, JSON.stringify({ service_number })]
+    await pool.execute(
+      "INSERT INTO audit_logs (user_id, role, action, target, details) VALUES (?, ?, 'add_personnel', ?, JSON_OBJECT('service_number', ?))",
+      [req.user.id, req.user.role, name, service_number]
     );
 
     res.status(201).json({ message: "Personnel added successfully" });
@@ -66,8 +66,8 @@ exports.updatePersonnel = async (req, res) => {
   const { base_id } = req.user;
 
   try {
-    const { rows } = await pool.query(
-      "SELECT * FROM personnel WHERE id = $1 AND base_id = $2",
+    const [rows] = await pool.execute(
+      "SELECT * FROM personnel WHERE id = ? AND base_id = ?",
       [id, base_id]
     );
     if (rows.length === 0)
@@ -75,14 +75,14 @@ exports.updatePersonnel = async (req, res) => {
         .status(404)
         .json({ message: "Personnel not found in your base" });
 
-    await pool.query(
-      "UPDATE personnel SET name = $1, ranks = $2, assigned_unit = $3 WHERE id = $4",
+    await pool.execute(
+      "UPDATE personnel SET name = ?, ranks = ?, assigned_unit = ? WHERE id = ?",
       [name, ranks, assigned_unit, id]
     );
 
-    await pool.query(
-      "INSERT INTO audit_logs (user_id, role, action, target, details) VALUES ($1, $2, 'update_personnel', $3, $4)",
-      [req.user.id, req.user.role, id, JSON.stringify({ personnel_id: id })]
+    await pool.execute(
+      "INSERT INTO audit_logs (user_id, role, action, target, details) VALUES (?, ?, 'update_personnel', ?, JSON_OBJECT('personnel_id', ?))",
+      [req.user.id, req.user.role, id, id]
     );
 
     res.json({ message: "Personnel updated successfully" });
@@ -97,8 +97,8 @@ exports.deletePersonnel = async (req, res) => {
   const { base_id } = req.user;
 
   try {
-    const { rows } = await pool.query(
-      "SELECT * FROM personnel WHERE id = $1 AND base_id = $2",
+    const [rows] = await pool.execute(
+      "SELECT * FROM personnel WHERE id = ? AND base_id = ?",
       [id, base_id]
     );
     if (rows.length === 0)
@@ -106,11 +106,11 @@ exports.deletePersonnel = async (req, res) => {
         .status(404)
         .json({ message: "Personnel not found in your base" });
 
-  await pool.query("DELETE FROM personnel WHERE id = $1", [id]);
+    await pool.execute("DELETE FROM personnel WHERE id = ?", [id]);
 
-    await pool.query(
-      "INSERT INTO audit_logs (user_id, role, action, target, details) VALUES ($1, $2, 'delete_personnel', $3, $4)",
-      [req.user.id, req.user.role, id, JSON.stringify({ personnel_id: id })]
+    await pool.execute(
+      "INSERT INTO audit_logs (user_id, role, action, target, details) VALUES (?, ?, 'delete_personnel', ?, JSON_OBJECT('personnel_id', ?))",
+      [req.user.id, req.user.role, id, id]
     );
 
     res.json({ message: "Personnel deleted successfully" });
@@ -124,11 +124,11 @@ exports.getBaseAssets = async (req, res) => {
   const { base_id } = req.user;
 
   try {
-    const { rows } = await pool.query(
+    const [rows] = await pool.execute(
       `SELECT a.id, a.name, a.serial_number, b.available_qty, b.assigned_qty
        FROM base_assets b
        JOIN assets a ON b.asset_id = a.id
-       WHERE b.base_id = $1`,
+       WHERE b.base_id = ?`,
       [base_id]
     );
     res.json(rows);
@@ -140,8 +140,8 @@ exports.getBaseAssets = async (req, res) => {
 // === View Own Logs Only ===
 exports.getMyLogs = async (req, res) => {
   try {
-    const { rows: logs } = await pool.query(
-      "SELECT * FROM audit_logs WHERE user_id = $1 ORDER BY created_at DESC",
+    const [logs] = await pool.execute(
+      "SELECT * FROM audit_logs WHERE user_id = ? ORDER BY created_at DESC",
       [req.user.id]
     );
     res.json(logs);
