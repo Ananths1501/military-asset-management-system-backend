@@ -1,0 +1,212 @@
+{
+  "info": {
+    "name": "MAMS - Commander APIs",
+    "_postman_id": "b1234567-89ab-4cde-90ef-1234567890cd",
+    "description": "Postman collection to test Commander endpoints (logistics officers, transfer requests, purchase requests, assignments, logs).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Commander Login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"commander1\",\n  \"password\": \"pass123\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:7373/api/admin/login",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7373",
+          "path": ["api", "admin", "login"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List Logistics Officers",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": {
+          "raw": "http://localhost:7373/api/commander/logistics",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7373",
+          "path": ["api", "commander", "logistics"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add Logistics Officer",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"log1\",\n  \"password\": \"logpass\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:7373/api/commander/logistics",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7373",
+          "path": ["api", "commander", "logistics"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Logistics Officer",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"log1_updated\",\n  \"is_active\": 1\n}"
+        },
+        "url": {
+          "raw": "http://localhost:7373/api/commander/logistics/3",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7373",
+          "path": ["api", "commander", "logistics", "3"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Logistics Officer",
+      "request": {
+        "method": "DELETE",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": {
+          "raw": "http://localhost:7373/api/commander/logistics/3",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7373",
+          "path": ["api", "commander", "logistics", "3"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Transfer Request",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"from_base\": 1,\n  \"asset_id\": 1,\n  \"quantity\": 20\n}"
+        },
+        "url": {
+          "raw": "http://localhost:7373/api/commander/transfer-requests",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7373",
+          "path": ["api", "commander", "transfer-requests"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Review Transfer Request (Approve/Reject)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"decision\": \"approved\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:7373/api/commander/transfer-requests/1/review",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7373",
+          "path": ["api", "commander", "transfer-requests", "1", "review"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Purchase Request",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"asset_id\": 1,\n  \"quantity\": 100\n}"
+        },
+        "url": {
+          "raw": "http://localhost:7373/api/commander/purchase-requests",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7373",
+          "path": ["api", "commander", "purchase-requests"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Assign Asset to Personnel",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"personnel_id\": 1,\n  \"asset_id\": 1,\n  \"quantity\": 5\n}"
+        },
+        "url": {
+          "raw": "http://localhost:7373/api/commander/assignments/personnel",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7373",
+          "path": ["api", "commander", "assignments", "personnel"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Base Logs",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": {
+          "raw": "http://localhost:7373/api/commander/logs",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7373",
+          "path": ["api", "commander", "logs"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "token",
+      "value": ""
+    }
+  ]
+}

@@ -1,0 +1,591 @@
+{
+	"info": {
+		"_postman_id": "7605450a-6cb3-4ae8-b49b-b8b20c15d8ab",
+		"name": "MAMS - Admin APIs",
+		"description": "Postman collection to test Admin APIs (Login, Bases, Users, Assets, Purchases, Transfers, Assignments, Logs).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32102529",
+		"_collection_link": "https://complaint-tracker.postman.co/workspace/complaint-tracker~ed60cc7e-7aff-4e29-9433-b33a93da3e1a/collection/32102529-7605450a-6cb3-4ae8-b49b-b8b20c15d8ab?action=share&source=collection_link&creator=32102529"
+	},
+	"item": [
+		{
+			"name": "Admin Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:7373/api/admin/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7373",
+					"path": [
+						"api",
+						"admin",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Bases",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:7373/api/admin/bases",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7373",
+					"path": [
+						"api",
+						"admin",
+						"bases"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Base",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Base Alpha\",\n  \"location\": \"New Delhi\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:7373/api/admin/bases",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7373",
+					"path": [
+						"api",
+						"admin",
+						"bases"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Base",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Base Beta\",\n  \"location\": \"Mumbai\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:7373/api/admin/bases/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7373",
+					"path": [
+						"api",
+						"admin",
+						"bases",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Base",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:7373/api/admin/bases/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7373",
+					"path": [
+						"api",
+						"admin",
+						"bases",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Users",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:7373/api/admin/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7373",
+					"path": [
+						"api",
+						"admin",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"commander1\",\n  \"password\": \"pass123\",\n  \"role\": \"commander\",\n  \"base_id\": 1\n}"
+				},
+				"url": {
+					"raw": "http://localhost:7373/api/admin/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7373",
+					"path": [
+						"api",
+						"admin",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Assets",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:7373/api/admin/assets",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7373",
+					"path": [
+						"api",
+						"admin",
+						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Asset",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Rifle\",\n  \"serial_number\": \"R12345\",\n  \"description\": \"5.56mm Assault Rifle\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:7373/api/admin/assets",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7373",
+					"path": [
+						"api",
+						"admin",
+						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Base Inventory",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:7373/api/admin/inventory?base_id=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7373",
+					"path": [
+						"api",
+						"admin",
+						"inventory"
+					],
+					"query": [
+						{
+							"key": "base_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Purchase Asset",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"base_id\": 1,\n  \"asset_id\": 1,\n  \"quantity\": 100\n}"
+				},
+				"url": {
+					"raw": "http://localhost:7373/api/admin/purchases",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7373",
+					"path": [
+						"api",
+						"admin",
+						"purchases"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Transfer Asset",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"from_base\": 1,\n  \"to_base\": 2,\n  \"asset_id\": 1,\n  \"quantity\": 50\n}"
+				},
+				"url": {
+					"raw": "http://localhost:7373/api/admin/transfers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7373",
+					"path": [
+						"api",
+						"admin",
+						"transfers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Assign Asset",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"base_id\": 1,\n  \"asset_id\": 1,\n  \"assignee_type\": \"user\",\n  \"assignee_id\": 2,\n  \"quantity\": 10\n}"
+				},
+				"url": {
+					"raw": "http://localhost:7373/api/admin/assignments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7373",
+					"path": [
+						"api",
+						"admin",
+						"assignments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Return Assigned Asset",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"assignment_id\": 1\n}"
+				},
+				"url": {
+					"raw": "http://localhost:7373/api/admin/assignments/return",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7373",
+					"path": [
+						"api",
+						"admin",
+						"assignments",
+						"return"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Audit Logs",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:7373/api/admin/logs",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7373",
+					"path": [
+						"api",
+						"admin",
+						"logs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Asset",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Rifles\",\n  \"serial_number\": \"R1234\",\n  \"description\": \"5.56mm Assault Rifle\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:7373/api/admin/assets/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7373",
+					"path": [
+						"api",
+						"admin",
+						"assets",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Asset",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Rifles\",\n  \"serial_number\": \"R12345\",\n  \"description\": \"5.56mm Assault Rifle\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:7373/api/admin/assets/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7373",
+					"path": [
+						"api",
+						"admin",
+						"assets",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Approve purchase",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}

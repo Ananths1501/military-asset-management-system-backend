@@ -1,0 +1,218 @@
+{
+	"info": {
+		"_postman_id": "1f2bf237-bd88-4b27-9960-85cd1d2e81f3",
+		"name": "MAMS - Logistics Officer APIs",
+		"description": "Collection to test Logistics Officer APIs (Login, Manage Personnel, View Assets, View Logs).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32102529",
+		"_collection_link": "https://complaint-tracker.postman.co/workspace/complaint-tracker~ed60cc7e-7aff-4e29-9433-b33a93da3e1a/collection/32102529-1f2bf237-bd88-4b27-9960-85cd1d2e81f3?action=share&source=collection_link&creator=32102529"
+	},
+	"item": [
+		{
+			"name": "Login (Logistics Officer)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"log1\",\n  \"password\": \"pass123\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:7373/api/logistics/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7373",
+					"path": [
+						"api",
+						"logistics",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Personnel",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"John Doe\",\n  \"ranks\": \"Soldier\",\n  \"service_number\": \"SN12345\",\n  \"assigned_unit\": \"Unit A\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:7373/api/logistics/personnel",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7373",
+					"path": [
+						"api",
+						"logistics",
+						"personnel"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Personnel",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"John D.\",\n  \"ranks\": \"Sergeant\",\n  \"assigned_unit\": \"Unit B\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:7373/api/logistics/personnel/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7373",
+					"path": [
+						"api",
+						"logistics",
+						"personnel",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Personnel",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:7373/api/logistics/personnel/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7373",
+					"path": [
+						"api",
+						"logistics",
+						"personnel",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "View Base Assets",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:7373/api/logistics/assets",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7373",
+					"path": [
+						"api",
+						"logistics",
+						"assets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "View My Logs",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:7373/api/logistics/logs",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7373",
+					"path": [
+						"api",
+						"logistics",
+						"logs"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}

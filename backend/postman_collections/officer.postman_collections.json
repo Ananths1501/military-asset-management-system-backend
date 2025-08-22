@@ -1,0 +1,132 @@
+{
+  "info": {
+    "name": "MAMS - Logistics Officer APIs",
+    "_postman_id": "e5c1a8d1-2233-4a9b-9f55-6789abcde001",
+    "description": "Collection to test Logistics Officer APIs (Login, Manage Personnel, View Assets, View Logs).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Login (Logistics Officer)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"log1\",\n  \"password\": \"pass123\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:7373/api/logistics/login",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7373",
+          "path": ["api", "logistics", "login"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add Personnel",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"John Doe\",\n  \"ranks\": \"Soldier\",\n  \"service_number\": \"SN12345\",\n  \"assigned_unit\": \"Unit A\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:7373/api/logistics/personnel",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7373",
+          "path": ["api", "logistics", "personnel"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Personnel",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"John D.\",\n  \"ranks\": \"Sergeant\",\n  \"assigned_unit\": \"Unit B\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:7373/api/logistics/personnel/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7373",
+          "path": ["api", "logistics", "personnel", "1"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Personnel",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "http://localhost:7373/api/logistics/personnel/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7373",
+          "path": ["api", "logistics", "personnel", "1"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "View Base Assets",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "http://localhost:7373/api/logistics/assets",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7373",
+          "path": ["api", "logistics", "assets"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "View My Logs",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": {
+          "raw": "http://localhost:7373/api/logistics/logs",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7373",
+          "path": ["api", "logistics", "logs"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "token",
+      "value": ""
+    }
+  ]
+}
